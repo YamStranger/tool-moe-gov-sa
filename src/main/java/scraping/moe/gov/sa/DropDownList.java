@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import selenium.elements.AllElementsLoaded;
 import selenium.elements.Condition;
 import selenium.elements.ElementNotFound;
 import selenium.elements.Search;
@@ -20,7 +21,7 @@ public class DropDownList {
     private final WebDriver driver;
 
     public DropDownList(final WebDriver driver, final Search search) {
-        this(driver, search, new SelectedCondition(
+        this(driver, search, new AllElementsLoaded(
                 new Search("loading window", new Condition(
                         By.xpath("//*[@id=\"ctl00_ctl15_g_ad55844d_fe4d_4f19_8dc9_99de149ea796_ctl00_updProgressSchool\"]")))));
     }
@@ -30,23 +31,6 @@ public class DropDownList {
         this.search = search;
         this.expectation = expectation;
         this.driver = driver;
-    }
-
-
-    public static class SelectedCondition implements ExpectedCondition<Boolean> {
-        private final Search search;
-
-        private SelectedCondition(Search search) {
-            this.search = search;
-        }
-
-        public Boolean apply(final WebDriver driver) {
-            try {
-                return !this.search.one(driver).isDisplayed();
-            } catch (ElementNotFound e) {
-                return false;
-            }
-        }
     }
 
     /**

@@ -39,15 +39,31 @@ public class DependableSelectors {
      * load all options for selectors according selectors xpath.
      * Selectors must depend on previous selector.
      *
-     * @return
-     */
+    */
     public List<Option> load() throws ElementNotFound {
         final List<Option> options = new LinkedList<>();
-        load(options, this.searches);
+        boolean success = true;
+        do {
+            try {
+                load(options, this.searches);
+                success = true;
+            } catch (Throwable error) {
+                System.out.println(Thread.currentThread().getName() + " reloading dependable selectors");
+                success = false;
+                this.driver.navigate().refresh();
+            } finally {
+                for (final Option option : options) {
+             //       this.skip.add(option.value);
+                }
+            }
+        } while (!success);
+
+
         return options;
     }
 
     int l = 0;
+    int counter = 0;
 
     private void load(final List<Option> values, final List<Search> queue) throws ElementNotFound {
         if (!queue.isEmpty()) {
@@ -61,72 +77,34 @@ public class DependableSelectors {
 
             final WebElement element = driver.findElement(By.xpath("/*//*[@id=\"ctl00_ctl15_g_ad55844d_fe4d_4f19_8dc9_99de149ea796_ctl00_updProgressSchool\"]"));
             return !element.isDisplayed();*/
-
             for (final Map.Entry<String, String> option : options.entrySet()) {
 
                 final String value = option.getKey();
                 final String text = option.getValue();
                 //try {
                 if (!skip.contains(value)) {
-                    System.out.println(l + " value=" + value + ", text=" + text.hashCode() + ",xpath" + search);
+                    System.out.println(Thread.currentThread().getName() + " " + l + "(" + this.counter + ")"
+                            + " value=" + value + ", text=" + text.hashCode() + ",xpath" + search);
                     final Option current = new Option(search, value, text);
                     values.add(current);
                     DropDownList list = new DropDownList(this.driver, search);
                     list.select(value);
                     //this.select(xpath, value, new SelectedCondition(xpath, value));
+        /*            if (++counter > 10) {
+                        break;
+                    }*/
                     this.load(current.dependable, level);
-                }
-                /*} catch (StaleElementReferenceException staleElementReferenceException) {
-                    String id = String.valueOf(new Date().getTime());
-
-                    System.out.println("exception during loading," + id + ".png" + "    " + staleElementReferenceException.getMessage());
-                    File scrsht = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                    try {
-                        FileUtils.copyFile(scrsht, new File(id + ".png"));
-                    } catch (IOException e) {
-                        throw new IllegalStateException(e);
+                    if(l==1){
+                        this.skip.add(value);
+                        System.out.println(Thread.currentThread().getName() + " " + l + " added to skip in future " + value);
                     }
-                }*/
+                } else {
+                    System.out.println(Thread.currentThread().getName() + " " + l + " skip known value " + value);
+                }
             }
             l -= 1;
         }
     }
-/*
-
-    private static class SelectedCondition implements ExpectedCondition<Boolean> {
-        private final String xpath;
-        private final String value;
-
-        private SelectedCondition(String xpath, String value) {
-            this.xpath = xpath;
-            this.value = value;
-        }
-
-        public Boolean apply(final WebDriver driver) {
-            final WebElement element = driver.findElement(By.xpath("/*/
-/*[@id=\"ctl00_ctl15_g_ad55844d_fe4d_4f19_8dc9_99de149ea796_ctl00_updProgressSchool\"]"));
-            return !element.isDisplayed();
-        }
-    }
-
-
-    private void select(final String xpath, final String value,
-                        final ExpectedCondition<Boolean> expectation) {
-        final WebElement webElement = this.driver.findElement(By.xpath(xpath));
-        final Select select = new Select(webElement);
-//        select.deselectAll();
-        select.selectByValue(value);
-        this.driver.findElement(By.xpath(xpath)).submit();
-//        webElement.submit();
-        try {
-            Thread.sleep(50);
-            (new WebDriverWait(driver, 120)).until(expectation);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-*/
-
 
     private Map<String, String> options(final Select select) {
         final Map<String, String> options = new TreeMap<>();
@@ -138,7 +116,7 @@ public class DependableSelectors {
     }
 
     /**
-     * Class for
+     * Class for representing values for every deepness
      */
     public static class Option {
         final Search search;
@@ -155,6 +133,7 @@ public class DependableSelectors {
         public void add(final Option child) {
             this.dependable.add(child);
         }
+
 
     }
 }

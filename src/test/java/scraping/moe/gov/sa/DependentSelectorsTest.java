@@ -34,10 +34,11 @@ public class DependentSelectorsTest {
             List<DependableSelectors.Option> options = selectors.load();
             File scrsht = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         } catch (Throwable e) {
+            throw e;
+        } finally {
             if (driver != null) {
                 driver.quit();
             }
-            throw e;
         }
     }
 }

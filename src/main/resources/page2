@@ -1,8 +1,0 @@
-<div id="ctl00_ctl15_g_ad55844d_fe4d_4f19_8dc9_99de149ea796_ctl00_updProgressSchool" style="display:none;">
-
-            <div id="div_Loading" style="position: absolute; top: 50%; left: 50%; text-align: center;
-                z-index: 9999999">
-                <img id="ctl00_ctl15_g_ad55844d_fe4d_4f19_8dc9_99de149ea796_ctl00_imgUpdateProgress" title="Loading ..." src="/Style%20Library/Images/ajaxloader.gif" alt="Loading ..." style="height:50px;width:50px;border-width:0px;">
-            </div>
-
-					</div>

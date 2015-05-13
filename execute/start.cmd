@@ -1,0 +1,1 @@
+C:\Java\jdk8.5\bin\java.exe -jar tool-moe-gov-sa-all-1.0.jar -mod=1 -rest=0 -threads=2 >out.lst

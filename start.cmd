@@ -1,1 +1,1 @@
-﻿C:\Java\jdk8.5\bin\java.exe -cp "*" com.search.Main  -last_id=2 -delimeter=1 -file=result.csv 
+﻿C:\Java\jdk8.5\bin\java.exe -cp "*" scraping.moe.gov.sa.Main  -last_id=2 -delimeter=1 -file=result.csv 

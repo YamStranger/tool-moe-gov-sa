@@ -26,10 +26,11 @@ public class SearchTest {
             );
             WebElement element = search.one(driver);
         } catch (Throwable e) {
+            throw e;
+        } finally {
             if (driver != null) {
                 driver.quit();
             }
-            throw e;
         }
 
         //*[@id="ctl00_ctl15_g_ad55844d_fe4d_4f19_8dc9_99de149ea796_ctl00_lblDistrictID"]
